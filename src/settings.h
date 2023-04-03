@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <espnow.h>
+#include <LittleFS.h>
+#include <ESP8266WiFi.h>
 
 #define defaultSSID "DMXAP"
 #define defaultPassword "password"
@@ -12,7 +14,8 @@
 
 enum MODES {
     ESPNOW = 0,
-    MQTT = 1
+    MQTT = 1,
+    ARTNET = 2,
 };
 
 void setupSettings();
@@ -46,6 +49,8 @@ uint getTotalTime();
 uint getTolerance();
 
 uint8_t getDMXAddress();
+
+uint8_t getArtnetUniverse();
 
 String toMacAddressString(uint8_t mac[6]);
 

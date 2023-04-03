@@ -1,6 +1,4 @@
-#include <Arduino.h>
 #include <motorHandler.h>
-#include <settings.h>
 
 uint8_t pinOpen = D0;
 uint8_t pinClose = D4;
@@ -17,7 +15,6 @@ void setupMotorHandler() {
     pinClose = getClosePort();
     totalTime = getTotalTime();
     tolerance = getTolerance();
-    // currentPosition = 0;
     
     pinMode(pinOpen, OUTPUT);
     pinMode(pinClose, OUTPUT);

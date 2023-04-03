@@ -1,6 +1,4 @@
-#include "webserver.h"
-#include "espNowHandler.h"
-#include "motorHandler.h"
+#include <webserver.h>
 
 AsyncWebServer server(80);
 
@@ -29,6 +27,7 @@ const char index_html[] PROGMEM = R"rawliteral(
                     <option disabled>Choose an operation mode</option>
                     <option value="0">ESPNow</option>
                     <option value="1" disabled>MQTT</option>
+                    <option value="2">ArtNet</option>
                 </select>
             </div>
             <div id="espNow" hidden>
@@ -68,6 +67,23 @@ const char index_html[] PROGMEM = R"rawliteral(
                 <div class="row is-center">
                     <label for="mqttPassword" class="col-2 is-right"><h4>Password</h4></label>
                     <input type="text" class="col is-center" id="mqttPassword" name="mqttPassword" placeholder="Password for the WiFi you want to join" required>
+                </div>
+            </div>
+
+            <div id="artnet" hidden>
+                <div class="row is-center">
+                    <label for="universe" class="col-2 is-right"><h4>ArtNet universe</h4></label>
+                    <input type="number" min="0" max="512" class="col is-center" id="universe" name="universe" placeholder="Number of the ArtNet universe" required>
+                </div>
+
+                <div class="row is-center">
+                    <label for="artNettSSID" class="col-2 is-right"><h4>SSID</h4></label>
+                    <input type="text" class="col is-center" id="artNetSSID" name="artNetSSID" placeholder="SSID for the WiFi you want to join" required>
+                </div>
+
+                <div class="row is-center">
+                    <label for="artNetPassword" class="col-2 is-right"><h4>Password</h4></label>
+                    <input type="text" class="col is-center" id="artNetPassword" name="artNetPassword" placeholder="Password for the WiFi you want to join" required>
                 </div>
             </div>
 
@@ -128,22 +144,48 @@ const char index_html[] PROGMEM = R"rawliteral(
             if (mode == 0){
                 document.getElementById("espNow").hidden = false
                 document.getElementById("mqtt").hidden = true
+                document.getElementById("artnet").hidden = true
                 document.getElementById("motorConfig").hidden = false
                 document.getElementById("modeMessage").style.display="none"
                 document.getElementById("submit").disabled = false
             } else if (mode == 1) {
                 document.getElementById("espNow").hidden = true
                 document.getElementById("mqtt").hidden = false
+                document.getElementById("artnet").hidden = true
                 document.getElementById("motorConfig").hidden = false
                 document.getElementById("modeMessage").style.display="none"
                 document.getElementById("submit").disabled = false
-            }
+            } else if (mode == 2) {
+                document.getElementById("espNow").hidden = true
+                document.getElementById("mqtt").hidden = true
+                document.getElementById("artnet").hidden = false
+                document.getElementById("motorConfig").hidden = false
+                document.getElementById("modeMessage").style.display="none"
+                document.getElementById("submit").disabled = false
+            } 
         }
         
         function sendForm(){
             const isMQTT = (mode == 1)
-            const ssid = (!isMQTT)? document.getElementById("espNowSSID").value : document.getElementById("mqttSSID").value
-            const password = (!isMQTT)? document.getElementById("espNowPassword").value : document.getElementById("mqttPassword").value
+            // const ssid = (!isMQTT)? document.getElementById("espNowSSID").value : document.getElementById("mqttSSID").value
+            // const password = (!isMQTT)? document.getElementById("espNowPassword").value : document.getElementById("mqttPassword").value
+            let ssid;
+            let password;
+            switch(mode) {
+                case 0: 
+                    ssid = document.getElementById("espNowSSID").value
+                    password = document.getElementById("espNowPassword").value
+                    break;
+                case 1: 
+                    ssid = document.getElementById("mqttSSID").value
+                    password = document.getElementById("mqttPassword").value
+                    break;
+                case 2: 
+                    ssid = document.getElementById("artNetSSID").value
+                    password = document.getElementById("artNetPassword").value
+                    break;
+            }
+
             const mqttTopic = (isMQTT)? document.getElementById("mqttTopic").value : "none"
             const mqttServer = (isMQTT)? document.getElementById("mqttServer").value : "none"
             const mqttPort = (isMQTT)? document.getElementById("mqttServerPort").value : "none"
@@ -152,6 +194,7 @@ const char index_html[] PROGMEM = R"rawliteral(
             const totalTime = document.getElementById("totalTime").value
             const tolerance = document.getElementById("tolerance").value
             const dmxAddress = document.getElementById("dmxAddress").value
+            const artnetUniverse = document.getElementById("universe").value
             const body = {
                 mode: mode,
                 ssid: ssid,
@@ -163,7 +206,8 @@ const char index_html[] PROGMEM = R"rawliteral(
                 closePort: closePort,
                 totalTime: totalTime,
                 tolerance: tolerance,
-                dmxAddress: dmxAddress
+                dmxAddress: dmxAddress,
+                artnetUniverse: artnetUniverse
             }
 
             const xhr = new XMLHttpRequest();
@@ -218,6 +262,10 @@ const char index_html[] PROGMEM = R"rawliteral(
                         document.getElementById("mqttTopic").value = data.mqttTopic
                         document.getElementById("mqttServer").value = data.mqttServer
                         document.getElementById("mqttServerPort").value = data.mqttServer
+                    } else if (mode == 2) {
+                        document.getElementById("artNetSSID").value = data.ssid
+                        document.getElementById("artNetPassword").value = data.password
+                        document.getElementById("universe").value = data.artnetUniverse
                     }
                     document.getElementById("openPort").value = data.openPort
                     document.getElementById("closePort").value = data.closePort

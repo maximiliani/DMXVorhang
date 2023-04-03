@@ -3,6 +3,9 @@
 
 #include <Arduino.h>
 #include <espnow.h>
+#include <ESP8266WiFi.h>
+#include <motorHandler.h>
+#include <settings.h>
 
 extern uint8_t *ownMac;
 extern uint8_t dmxRecvAddress;

@@ -8,7 +8,9 @@
 #include <ESPAsyncWebServer.h>
 #include <AsyncJson.h>
 #include <ArduinoJson.h>
-#include "settings.h"
+#include <settings.h>
+#include <espNowHandler.h>
+#include <motorHandler.h>
 
 void setupWebserver();
 

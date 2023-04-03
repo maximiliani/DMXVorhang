@@ -1,9 +1,4 @@
-// Created by Maximilian Inckmann on 27.10.22
-
 #include <settings.h>
-// #include <FS.h>
-#include <LittleFS.h>
-#include <ESP8266WiFi.h>
 
 const int capacity = 2*JSON_OBJECT_SIZE(16) + 16;
 StaticJsonDocument <capacity> doc;
@@ -151,6 +146,10 @@ uint getTolerance() {
 
 uint8_t getDMXAddress() {
     return doc["dmxAddress"];
+}
+
+uint8_t getArtnetUniverse() {
+    return doc["artnetUniverse"];
 }
 
 void setupSettings() {

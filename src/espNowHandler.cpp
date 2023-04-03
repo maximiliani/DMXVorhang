@@ -1,17 +1,9 @@
-#include <Arduino.h>
-#include <ESP8266WiFi.h>
-#include <espnow.h>
 #include <espnowhandler.h>
-#include <motorHandler.h>
-// #include <dmxHandler.h>
-#include "settings.h"
 
 typedef struct dmxData {
     int address;
     int value;
 } dmxData;
-
-// esp_now_peer_info_t peerInfo;
 
 uint8_t *ownMac = fromMacAddressString(WiFi.macAddress());
 uint8_t dmxRecvAddress = 1;
@@ -40,9 +32,7 @@ void setupESPNOWRecv() {
     Serial.print("MAC: ");
     Serial.println(WiFi.macAddress());
 
-    // Set device as a Wi-Fi Station
     WiFi.mode(WIFI_STA);
-    // WiFi.disconnect();
 
     if (esp_now_init() != 0) {
         Serial.println("Error initializing ESP-NOW");
@@ -50,7 +40,6 @@ void setupESPNOWRecv() {
     }
 
     dmxRecvAddress = getDMXAddress();
-    // esp_now_set_self_role(ESP_NOW_ROLE_SLAVE);
     esp_now_register_recv_cb(OnDataRecv);
     Serial.println("ESPNOW initialized");
 }

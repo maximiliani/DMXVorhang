@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <ArduinoOTA.h>
 #include <espnowhandler.h>
+#include <artnetHandler.h>
 #include <motorHandler.h>
 #include <settings.h>
 #include <webserver.h>
@@ -8,7 +9,15 @@
 void setup() {
     Serial.begin(115200);
     setupSettings();
-    setupESPNOWRecv();
+    if (getMode() == ESPNOW) {
+        setupESPNOWRecv();
+    } else if (getMode() == MQTT) {
+        // setupMQTT();
+    } else if (getMode() == ARTNET) {
+        setupArtnetHandler();
+    }
+    
+    // setupESPNOWRecv();
     setupWebserver();
     setupMotorHandler();
 
@@ -20,4 +29,8 @@ void setup() {
 void loop() {
     ArduinoOTA.handle();
     loopMotorHandler();
+
+    if (getMode() == ARTNET) {
+        loopArtnetHandler();
+    }    
 }
