@@ -22,8 +22,6 @@ void setupSettings();
 
 void setJSON(String serializedJSON, bool reboot = false);
 
-// StaticJsonDocument<256> getSettingsJSON();
-
 String getJSONString();
 
 const char *getSSID();
@@ -31,8 +29,6 @@ const char *getSSID();
 const char *getPassword();
 
 MODES getMode();
-
-// uint8_t **getBroadcastAddresses();
 
 const char *getMQTTTopic();
 
