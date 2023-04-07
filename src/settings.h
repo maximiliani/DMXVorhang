@@ -12,6 +12,12 @@
 #define maxAmountOfESPNowPeers 7
 //#define amountOfESPNowPeers 20  // should be the maximum amount, but is only available with additional configuration
 
+/*
+* This enum is used to determine the mode of the device.
+* ESPNOW: The device will receive DMX data via ESP-NOW
+* MQTT: The device will receive DMX data via MQTT (not implemented yet)
+* ARTNET: The device will receive DMX data via Art-Net
+*/
 enum MODES {
     ESPNOW = 0,
     MQTT = 1,
@@ -46,7 +52,7 @@ uint getTolerance();
 
 uint8_t getDMXAddress();
 
-uint8_t getArtnetUniverse();
+uint16_t getArtnetUniverse();
 
 String toMacAddressString(uint8_t mac[6]);
 

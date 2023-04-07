@@ -2,6 +2,10 @@
 
 Artnet artnet;
 
+/*
+* This function is called on startup to setup the artnet handler
+* It will connect to the WiFi and start the artnet handler
+*/
 void setupArtnetHandler() {
     WiFi.begin(getSSID(), getPassword());
 
@@ -18,6 +22,11 @@ void setupArtnetHandler() {
     artnet.begin();
 }
 
+/*
+* This function is called in the main loop to handle the artnet data
+* It checks if ArtNet data is available and if the universe and address matches the settings
+* If so it will call the setRelativePosition function to move the curtain
+*/
 void loopArtnetHandler() {
     if (artnet.read() == ART_DMX){
         if (artnet.getUniverse() == getArtnetUniverse()){

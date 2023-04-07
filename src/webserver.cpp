@@ -2,6 +2,10 @@
 
 AsyncWebServer server(80);
 
+/*
+* This is the index.html file that is served by the webserver.
+* It contains the HTML, CSS and JavaScript code for the webinterface.
+*/
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html lang="en">
@@ -282,11 +286,19 @@ const char index_html[] PROGMEM = R"rawliteral(
 </html>
 )rawliteral";
 
+/*
+* This method is called when the server receives a request to an unknown resource.
+*/
 void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
 }
 
+/*
+* This method is called when the server is started.
+* It sets up the webserver with its endpoints and WiFi.
+*/
 void setupWebserver() {
+    // WiFi
     WiFi.mode(WIFI_AP_STA);
     WiFi.softAP(getSSID(), getPassword());
     Serial.println("AP SSID: " + String(getSSID()) + " Password: " + String(getPassword()));

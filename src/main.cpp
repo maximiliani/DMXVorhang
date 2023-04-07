@@ -6,6 +6,9 @@
 #include <settings.h>
 #include <webserver.h>
 
+/*
+* This method is run on startup.
+*/
 void setup() {
     Serial.begin(115200);
     setupSettings();
@@ -26,10 +29,15 @@ void setup() {
     ArduinoOTA.begin();
 }
 
-void loop() {
-    ArduinoOTA.handle();
-    loopMotorHandler();
 
+/*
+* This method is looped until poweroff.
+*/
+void loop() {
+    ArduinoOTA.handle();  // Handles incoming OTA update requests
+    loopMotorHandler();   // Handles the motor movement
+
+    // If current mode is ArtNet, it will handle the ArtNet data
     if (getMode() == ARTNET) {
         loopArtnetHandler();
     }    
